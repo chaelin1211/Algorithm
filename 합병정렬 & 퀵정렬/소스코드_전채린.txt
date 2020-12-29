@@ -1,0 +1,58 @@
+	while (i < j) {
+		while (A[i] <= p && i < j &&i < a) {
+			if (A[i] == p) {
+				//A[i]가 pivot과 같을 때 EQ로 이동
+				c++;				
+
+				// LT의 크기를 줄이기 위해 a를 앞으로 전진
+				tmp = A[a];	
+				A[a] = A[a - 1];	
+				A[a - 1] = tmp;
+
+				tmp = A[a];	
+				A[a] = A[i];	
+				A[i] = tmp;
+				a--;
+			}
+			else 
+				i++;
+		}
+		while (p <= A[j] && i < j && a + c < j) {
+			if (A[j] == p) {
+				//A[j]가 pivot과 같을 때 EQ로 이동
+				c++;
+
+				//EQ의 뒤에 A[j] 저장
+				tmp = A[j];	
+				A[j] = A[a + c];	
+				A[a + c] = tmp;
+			}
+			else 
+				j--;
+		}
+		//i와 j가 EQ에 닿으면 종료 - a~a+c인덱스 내에는 다른 수가 존재하지 않음
+		if (i == a && a + c == j)
+			break;
+		if (i < j) {
+			// i나 j가 먼저 EQ에 도달한 경우
+			// EQ의 위치를 조정해야한다.
+			if (c == 0) {
+				if (i == a) 
+					a = j;
+				else if (j == a) 
+					a = i;
+			}
+			else {
+				if (i == a) {
+					a++;
+					c--;
+				}
+				else if (j == a + c) 
+					c--;
+			}
+			tmp = A[i];	
+			A[i] = A[j];	
+			A[j] = tmp;
+		}
+	}
+}
