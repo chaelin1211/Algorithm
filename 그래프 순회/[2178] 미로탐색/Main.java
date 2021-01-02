@@ -7,162 +7,162 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main {
-	static HashMap<Integer, ArrayList<edge>> edges = new HashMap<Integer, ArrayList<edge>>();
-	static HashMap<Integer, vertex> verts = new HashMap<Integer, vertex>();
+    static HashMap<Integer, ArrayList<edge>> edges = new HashMap<Integer, ArrayList<edge>>();
+    static HashMap<Integer, vertex> verts = new HashMap<Integer, vertex>();
 
-	public static void main(String arg[]) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String arg[]) throws NumberFormatException, IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-		String str = br.readLine();
+        String str = br.readLine();
 
-		int N = Integer.parseInt(str.split(" ")[0]);
-		int M = Integer.parseInt(str.split(" ")[1]);
+        int N = Integer.parseInt(str.split(" ")[0]);
+        int M = Integer.parseInt(str.split(" ")[1]);
 
-		int index;
-		for (int i = 0; i < N; i++) {
-			str = br.readLine();
-			for (int j = 0; j < M; j++) {
-				int tmp = str.charAt(j) - ('1' - 1);
-				index = i * M + j;
+        int index;
+        for (int i = 0; i < N; i++) {
+            str = br.readLine();
+            for (int j = 0; j < M; j++) {
+                int tmp = str.charAt(j) - ('1' - 1);
+                index = i * M + j;
 
-				verts.put(index, new vertex(index, tmp));
+                verts.put(index, new vertex(index, tmp));
 
-				if (tmp == 1) {
-					int ti = i, tj = j;
-					int tmpInd;
-					// 위
-					if (i >= 1) {
-						ti--;
-						tmpInd = ti * M + tj;
-						if (verts.get(tmpInd).number == 1) {
-							if (edges.get(tmpInd) == null)
-								edges.put(tmpInd, new ArrayList<edge>());
-							if (edges.get(index) == null)
-								edges.put(index, new ArrayList<edge>());
-							edges.get(tmpInd).add(new edge(index, tmpInd));
-							edges.get(index).add(new edge(tmpInd, index));
-						}
-					}
+                if (tmp == 1) {
+                    int ti = i, tj = j;
+                    int tmpInd;
+                    // 위
+                    if (i >= 1) {
+                        ti--;
+                        tmpInd = ti * M + tj;
+                        if (verts.get(tmpInd).number == 1) {
+                            if (edges.get(tmpInd) == null)
+                                edges.put(tmpInd, new ArrayList<edge>());
+                            if (edges.get(index) == null)
+                                edges.put(index, new ArrayList<edge>());
+                            edges.get(tmpInd).add(new edge(index, tmpInd));
+                            edges.get(index).add(new edge(tmpInd, index));
+                        }
+                    }
 
-					ti = i;
-					tj = j;
-					// 왼쪽
-					if (j >= 1) {
-						tj--;
-						tmpInd = ti * M + tj;
-						if (verts.get(tmpInd).number == 1) {
-							if (edges.get(tmpInd) == null)
-								edges.put(tmpInd, new ArrayList<edge>());
-							if (edges.get(index) == null)
-								edges.put(index, new ArrayList<edge>());
-							edges.get(tmpInd).add(new edge(index, tmpInd));
-							edges.get(index).add(new edge(tmpInd, index));
-						}
-					}
-				}
-			}
-		}
-		System.out.println(func());
-	}
+                    ti = i;
+                    tj = j;
+                    // 왼쪽
+                    if (j >= 1) {
+                        tj--;
+                        tmpInd = ti * M + tj;
+                        if (verts.get(tmpInd).number == 1) {
+                            if (edges.get(tmpInd) == null)
+                                edges.put(tmpInd, new ArrayList<edge>());
+                            if (edges.get(index) == null)
+                                edges.put(index, new ArrayList<edge>());
+                            edges.get(tmpInd).add(new edge(index, tmpInd));
+                            edges.get(index).add(new edge(tmpInd, index));
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println(func());
+    }
 
-	public static int func() {
-		int ind = 0;
-		int count = -1;
-		
-		ArrayList<vertex> tmpVerListA = new ArrayList<vertex>();
-		ArrayList<vertex> tmpVerListB = new ArrayList<vertex>();
+    public static int func() {
+        int ind = 0;
+        int count = -1;
 
-		ArrayList<vertex>[] ListToggle = new ArrayList[2];
-		ListToggle[0] = tmpVerListA;
-		ListToggle[1] = tmpVerListB;
+        ArrayList<vertex> tmpVerListA = new ArrayList<vertex>();
+        ArrayList<vertex> tmpVerListB = new ArrayList<vertex>();
 
-		vertex ver = verts.get(0);
+        ArrayList<vertex>[] ListToggle = new ArrayList[2];
+        ListToggle[0] = tmpVerListA;
+        ListToggle[1] = tmpVerListB;
 
-		ListToggle[0].add(ver);
-		count++;
+        vertex ver = verts.get(0);
 
-		while (!ListToggle[ind].isEmpty()) {
-			ver = ListToggle[ind].remove(0);
-			ver.flag = 1;
+        ListToggle[0].add(ver);
+        count++;
 
-			if(ver.index== verts.size()-1) {
-				count++;
-				break;
-			}
-			if (ver.number == 1) {
-				ArrayList<edge> tmpList = edges.get(ver.index);
+        while (!ListToggle[ind].isEmpty()) {
+            ver = ListToggle[ind].remove(0);
+            ver.flag = 1;
 
-				while (!tmpList.isEmpty()) {
-					edge edg = tmpList.remove(0);
-					if (edg.flag == 1)
-						continue;
-					int oppsiteInd = edg.otherPoint(ver.index);
-					if (oppsiteInd != -1) {
-						vertex tmpVer = verts.get(oppsiteInd);
-						if (tmpVer.flag != 1) {
-							if (ind == 0)
-								ListToggle[1].add(tmpVer);
-							else
-								ListToggle[0].add(tmpVer);
-						}
-					}
-					edg.flag = 1;
-				}
-			}
-			if (ListToggle[ind].isEmpty()) {
-				count++;
-				if (ind == 0)
-					ind = 1;
-				else
-					ind = 0;
-			}
-		}
-		return count;
-	}
+            if (ver.index == verts.size() - 1) {
+                count++;
+                break;
+            }
+            if (ver.number == 1) {
+                ArrayList<edge> tmpList = edges.get(ver.index);
+
+                while (!tmpList.isEmpty()) {
+                    edge edg = tmpList.remove(0);
+                    if (edg.flag == 1)
+                        continue;
+                    int oppsiteInd = edg.otherPoint(ver.index);
+                    if (oppsiteInd != -1) {
+                        vertex tmpVer = verts.get(oppsiteInd);
+                        if (tmpVer.flag != 1) {
+                            if (ind == 0)
+                                ListToggle[1].add(tmpVer);
+                            else
+                                ListToggle[0].add(tmpVer);
+                        }
+                    }
+                    edg.flag = 1;
+                }
+            }
+            if (ListToggle[ind].isEmpty()) {
+                count++;
+                if (ind == 0)
+                    ind = 1;
+                else
+                    ind = 0;
+            }
+        }
+        return count;
+    }
 }
 
 class vertex {
-	int index;
-	int number;
-	int flag;
+    int index;
+    int number;
+    int flag;
 
-	public vertex() {
-		this.index = 0;
-		this.number = 0;
-		this.flag = 0;
-	}
+    public vertex() {
+        this.index = 0;
+        this.number = 0;
+        this.flag = 0;
+    }
 
-	public vertex(int index, int number) {
-		this.index = index;
-		this.number = number;
-	}
+    public vertex(int index, int number) {
+        this.index = index;
+        this.number = number;
+    }
 }
 
 class edge {
-	int s, e;
-	int flag;
-	// 0: 초기 상태
-	// 1: 방문된 상태
+    int s, e;
+    int flag;
+    // 0: 초기 상태
+    // 1: 방문된 상태
 
-	public edge() {
-		this.s = 0;
-		this.e = 0;
-		this.flag = 0;
-	}
+    public edge() {
+        this.s = 0;
+        this.e = 0;
+        this.flag = 0;
+    }
 
-	public edge(int s, int e) {
-		this.s = s;
-		this.e = e;
-		this.flag = 0;
-	}
+    public edge(int s, int e) {
+        this.s = s;
+        this.e = e;
+        this.flag = 0;
+    }
 
-	public int otherPoint(int a) {
-		if (a == this.s) {
-			return this.e;
-		} else if (a == this.e) {
-			return this.s;
-		} else {
-			return -1;
-		}
-	}
+    public int otherPoint(int a) {
+        if (a == this.s) {
+            return this.e;
+        } else if (a == this.e) {
+            return this.s;
+        } else {
+            return -1;
+        }
+    }
 }
