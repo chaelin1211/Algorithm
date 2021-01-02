@@ -12,18 +12,13 @@ public class Main {
 
 	public static void main(String arg[]) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));// 선언
 
 		String str = br.readLine();
 
 		int N = Integer.parseInt(str.split(" ")[0]);
 		int M = Integer.parseInt(str.split(" ")[1]);
 
-		int[][] arr = new int[N][M];
-		int[][] flag = new int[N][M];
-		// ArrayList<vertex> verts = new ArrayList<vertex>();
 		int index;
-		int a, b;
 		for (int i = 0; i < N; i++) {
 			str = br.readLine();
 			for (int j = 0; j < M; j++) {
@@ -67,23 +62,20 @@ public class Main {
 				}
 			}
 		}
-		a = func();
-
-		bw.write(a);
-		bw.flush();
+		System.out.println(func());
 	}
 
 	public static int func() {
 		int ind = 0;
 		int count = -1;
-
-		ArrayList<vertex> tmpVerListA = new ArrayList<vertex>();
-		ArrayList<vertex> tmpVerListB = new ArrayList<vertex> ();
 		
+		ArrayList<vertex> tmpVerListA = new ArrayList<vertex>();
+		ArrayList<vertex> tmpVerListB = new ArrayList<vertex>();
+
 		ArrayList<vertex>[] ListToggle = new ArrayList[2];
 		ListToggle[0] = tmpVerListA;
 		ListToggle[1] = tmpVerListB;
-		
+
 		vertex ver = verts.get(0);
 
 		ListToggle[0].add(ver);
@@ -93,24 +85,37 @@ public class Main {
 			ver = ListToggle[ind].remove(0);
 			ver.flag = 1;
 
+			if(ver.index== verts.size()-1) {
+				count++;
+				break;
+			}
 			if (ver.number == 1) {
 				ArrayList<edge> tmpList = edges.get(ver.index);
-				
-				
+
 				while (!tmpList.isEmpty()) {
 					edge edg = tmpList.remove(0);
-
+					if (edg.flag == 1)
+						continue;
 					int oppsiteInd = edg.otherPoint(ver.index);
 					if (oppsiteInd != -1) {
 						vertex tmpVer = verts.get(oppsiteInd);
-						count++;
 						if (tmpVer.flag != 1) {
-							tmpVerListB.add(tmpVer);
-						} 
+							if (ind == 0)
+								ListToggle[1].add(tmpVer);
+							else
+								ListToggle[0].add(tmpVer);
+						}
 					}
+					edg.flag = 1;
 				}
 			}
-			
+			if (ListToggle[ind].isEmpty()) {
+				count++;
+				if (ind == 0)
+					ind = 1;
+				else
+					ind = 0;
+			}
 		}
 		return count;
 	}
