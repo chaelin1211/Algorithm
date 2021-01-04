@@ -16,10 +16,10 @@ public class Main {
 		int M = Integer.parseInt(str.split(" ")[0]);
 		int N = Integer.parseInt(str.split(" ")[1]);
 
-		int numberOfZero = 0, numberOfOne;
+		int numberOfZero = 0;
 		int index;
 
-		HashMap<Integer, vertex> verts = new HashMap<Integer, vertex>();
+		vertex[] verts = new vertex[N * M];
 
 		// 현재 익어있는 토마토~
 		ArrayList<Integer> vertexesOfOne = new ArrayList<Integer>();
@@ -30,8 +30,8 @@ public class Main {
 				int tmp = Integer.parseInt(str.split(" ")[j]);
 				index = i * M + j;
 
-				verts.put(index, new vertex(index, tmp));
-				verts.get(index).incidentList = incidentList(i, j, N, M);
+				verts[index] = new vertex(index, tmp);
+				verts[index].incidentList = incidentList(i, j, N, M, verts);
 
 				if (tmp == 1) {
 					vertexesOfOne.add(index);
@@ -44,7 +44,7 @@ public class Main {
 		System.out.println(func(verts, vertexesOfOne, numberOfZero));
 	}
 
-	public static int func(HashMap<Integer, vertex> verts, ArrayList<Integer> vertexesOfOne, int numberOfZero) {
+	public static int func(vertex[] verts, ArrayList<Integer> vertexesOfOne, int numberOfZero) {
 		int count = 0;
 
 		if (numberOfZero == 0) {
@@ -55,7 +55,7 @@ public class Main {
 		ListofList.add(vertexesOfOne);
 
 		while (ListofList.get(0).size() > 0 && numberOfZero > 0) {
-			vertex nowVer = verts.get(ListofList.get(0).remove(0));
+			vertex nowVer = verts[(int) ListofList.get(0).remove(0)];
 
 			ArrayList<Integer> incidentList = nowVer.incidentList;
 
@@ -65,17 +65,18 @@ public class Main {
 
 			ArrayList<Integer> tmpList = new ArrayList<Integer>();
 			for (int i : incidentList) {
-				vertex inciVer = verts.get(i);
+				vertex inciVer = verts[i];
 
-				if (inciVer.number == 0) {
-					// 주위의 토마토가 익는 중~
-					inciVer.number = 1;
-					numberOfZero--;
+				if (inciVer.number != 0)
+					continue;
+				// 주위의 토마토가 익는 중~
+				inciVer.number = 1;
+				numberOfZero--;
 
-					tmpList.add(inciVer.index);
-				}
-			} 
-			
+				tmpList.add(inciVer.index);
+
+			}
+
 			if (ListofList.size() < 2) {
 				ListofList.add(tmpList);
 				count++;
@@ -93,7 +94,7 @@ public class Main {
 		return count;
 	}
 
-	public static ArrayList<Integer> incidentList(int i, int j, int N, int M) {
+	public static ArrayList<Integer> incidentList(int i, int j, int N, int M, vertex[] verts) {
 		ArrayList<Integer> tmp = new ArrayList<Integer>();
 		int x;
 
