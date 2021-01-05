@@ -1,14 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
 public class Main {
 	// BFS 적용
-	static HashMap<Integer, Queue<edge>> edges = new HashMap<Integer, Queue<edge>>();
-	static HashMap<Integer, vertex> verts = new HashMap<Integer, vertex>();
+	static Queue<edge>[] edges = new LinkedList[1001];
+	static vertex[] verts = new vertex[1001];
 	static Queue<vertex> OneVerts = new LinkedList<vertex>();
 
 	public static void main(String arg[]) throws NumberFormatException, IOException {
@@ -33,7 +32,7 @@ public class Main {
 					continue;
 
 				vertex v = new vertex(index, tmp);
-				verts.put(index,v);
+				verts[index]= v;
 
 				if (tmp == 1) {
 					OneVerts.add(v);
@@ -50,16 +49,16 @@ public class Main {
 				if (i >= 1) {
 					ti--;
 					tmpInd = ti * M + tj;
-					if (verts.get(tmpInd) != null) {
+					if (verts[tmpInd] != null) {
 						// 검색시 효율을 위해 Edge를 이중으로 저장
 						// a-b인 경우 (a,b), (b,a) 두 가지로 저장
 
-						if (edges.get(tmpInd) == null)
-							edges.put(tmpInd, new LinkedList<edge>());
-						if (edges.get(index) == null)
-							edges.put(index, new LinkedList<edge>());
-						edges.get(tmpInd).add(new edge(index, tmpInd));
-						edges.get(index).add(new edge(tmpInd, index));
+						if (edges[tmpInd] == null)
+							edges[tmpInd] = new LinkedList<edge>();
+						if (edges[index] == null)
+							edges[index] = new LinkedList<edge>();
+						edges[tmpInd].add(new edge(index, tmpInd));
+						edges[index].add(new edge(tmpInd, index));
 					}
 				}
 
@@ -69,17 +68,17 @@ public class Main {
 				if (j >= 1) {
 					tj--;
 					tmpInd = ti * M + tj;
-					if (verts.get(tmpInd) != null) {
+					if (verts[tmpInd] != null) {
 						// 검색시 효율을 위해 Edge를 이중으로 저장
 						// a-b인 경우 (a,b), (b,a) 두 가지로 저장
-						if (edges.get(tmpInd) == null)
-							edges.put(tmpInd, new LinkedList<edge>());
-						if (edges.get(index) == null)
-							edges.put(index, new LinkedList<edge>());
-						edges.get(tmpInd).add(new edge(index, tmpInd));
-						edges.get(index).add(new edge(tmpInd, index));
-					}
 
+						if (edges[tmpInd] == null)
+							edges[tmpInd] = new LinkedList<edge>();
+						if (edges[index] == null)
+							edges[index] = new LinkedList<edge>();
+						edges[tmpInd].add(new edge(index, tmpInd));
+						edges[index].add(new edge(tmpInd, index));
+					}
 				}
 			}
 		}
@@ -107,7 +106,7 @@ public class Main {
 		while (!ListToggle[ind].isEmpty() && numberOfZero > 0) {
 			ver = ListToggle[ind].remove();
 
-			Queue<edge> tmpList = edges.get(ver.index);
+			Queue<edge> tmpList = edges[ver.index];
 
 			// 현재 Vertex의 연결 Edge를 확인해 반대편 Vertex를 다른 리스트에 삽입
 			while (!tmpList.isEmpty()) {
@@ -116,20 +115,17 @@ public class Main {
 				if (edg.flag != 1) {
 					// 반대편 Vertex 리턴 - 오류 시 -1
 					int oppsiteInd = edg.otherPoint(ver.index);
-					vertex tmpVer = verts.get(oppsiteInd);
+					vertex tmpVer = verts[oppsiteInd];
+					// 해당 Edge는 트리 간선
+					edg.flag = 1;
 
-					if (tmpVer != null) {
-						// 해당 Edge는 트리 간선
-						edg.flag = 1;
-
-						if (tmpVer != null && tmpVer.number == 0) {
-							numberOfZero--;
-							tmpVer.number = 1;
-							if (ind == 0)
-								ListToggle[1].add(tmpVer);
-							else
-								ListToggle[0].add(tmpVer);
-						}
+					if (tmpVer != null && tmpVer.number == 0) {
+						numberOfZero--;
+						tmpVer.number = 1;
+						if (ind == 0)
+							ListToggle[1].add(tmpVer);
+						else
+							ListToggle[0].add(tmpVer);
 					}
 				}
 			}
@@ -141,13 +137,13 @@ public class Main {
 					ind = 0;
 			}
 		}
-		if(numberOfZero>0)
+		if (numberOfZero > 0)
 			return -1;
 
-		if(!ListToggle[0].isEmpty()&&!ListToggle[1].isEmpty()) {
+		if (!ListToggle[0].isEmpty() && !ListToggle[1].isEmpty()) {
 			count++;
 		}
-		
+
 		return count;
 	}
 }
