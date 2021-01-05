@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main {
+    //BFS 적용
     static HashMap<Integer, ArrayList<edge>> edges = new HashMap<Integer, ArrayList<edge>>();
     static HashMap<Integer, vertex> verts = new HashMap<Integer, vertex>();
 
