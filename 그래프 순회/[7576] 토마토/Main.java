@@ -6,8 +6,8 @@ import java.util.Queue;
 
 public class Main {
 	// BFS 적용
-	static Queue<edge>[] edges = new LinkedList[1001];
-	static vertex[] verts = new vertex[1001];
+	static Queue<edge>[] edges;
+	static vertex[] verts;
 	static Queue<vertex> OneVerts = new LinkedList<vertex>();
 
 	public static void main(String arg[]) throws NumberFormatException, IOException {
@@ -17,7 +17,10 @@ public class Main {
 
 		int M = Integer.parseInt(str.split(" ")[0]);
 		int N = Integer.parseInt(str.split(" ")[1]);
-
+		
+		edges = new LinkedList[N*M];
+		verts = new vertex[N*M];
+		
 		int index;
 		int numberOfZero = 0;
 		for (int i = 0; i < N; i++) {
@@ -28,17 +31,17 @@ public class Main {
 
 				// 각 원소를 Vertex로 보고 Vertex 해쉬맵에 삽입
 				// -1이 아닌 경우만 삽입
-				if (tmp == -1)
-					continue;
 
 				vertex v = new vertex(index, tmp);
 				verts[index]= v;
 
-				if (tmp == 1) {
+				if (tmp == 1) 
 					OneVerts.add(v);
-				} else if (tmp == 0)
+				else if (tmp == 0)
 					numberOfZero++;
-
+				else	//tmmp == -1
+					continue;
+				
 				// vertex가 -1이 아닐 경우 - edge를 가질 수 있음
 				int ti = i, tj = j;
 				int tmpInd;
