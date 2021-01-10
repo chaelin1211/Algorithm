@@ -93,7 +93,7 @@ public class Main {
 
         ListToggle[0].add(ver);
         count++;
-
+        
         while (!ListToggle[ind].isEmpty()) {
             ver = ListToggle[ind].remove(0);
             ver.flag = 1;
