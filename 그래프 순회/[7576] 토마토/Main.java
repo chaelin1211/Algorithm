@@ -54,9 +54,6 @@ public class Main {
 			while (!inci.isEmpty()) {
 				edge edg = inci.remove(0);
 
-				if (edg.flag != 0)
-					continue;
-				edg.flag = 1;
 				vertex otherVer = edg.otherPoint(ver.i, ver.j);
 				if (otherVer != null) {
 					if (otherVer.num == 0) {
@@ -123,12 +120,10 @@ class vertex {
 class edge {
 	vertex s;
 	vertex e;
-	int flag;
 
 	public edge(vertex s, vertex e) {
 		this.s = s;
 		this.e = e;
-		flag = 0;
 	}
 
 	public vertex otherPoint(int i, int j) {
