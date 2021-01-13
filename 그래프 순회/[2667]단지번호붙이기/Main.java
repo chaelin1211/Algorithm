@@ -1,8 +1,9 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-    public static void main(String[] arg) {
+    public static void main(String[] arg) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int N = Integer.parseInt(br.readLine());
@@ -17,7 +18,7 @@ public class Main {
             String[] tmp = br.readLine().split("");
             arr[i] = tmp;
             for (int j = 0; j < N; j++) {
-                if (arr[i][j] == 1) {
+                if (arr[i][j] == "1") {
                     verList[i][j] = new vertex(i,j);
                     verList[i][j].index = idx++;
 
