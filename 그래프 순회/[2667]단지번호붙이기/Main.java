@@ -32,7 +32,7 @@ public class Main {
                     if(i>0 && verList[i-1][j]!=null){
                         if(minInd>verList[i-1][j].index){
                             minInd = verList[i-1][j].index;
-                            flag = -1;
+                            flag = 0;
                         }else if(minInd<verList[i-1][j].index){
                         	belongArr.get(minInd).addAll(belongArr.get(verList[i-1][j].index));
                             belongArr.remove(verList[i-1][j].index);
@@ -42,7 +42,7 @@ public class Main {
                     if(j>0 && verList[i][j-1]!=null){
                         if(minInd>verList[i][j-1].index){
                             minInd = verList[i][j-1].index;
-                            flag = -1;
+                            flag = 0;
                         }else if(minInd<verList[i][j-1].index){
                         	belongArr.get(minInd).addAll(belongArr.get(verList[i][j-1].index));
                             belongArr.remove(verList[i][j-1].index);
