@@ -8,13 +8,13 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
 
         String[][] arr = new String[N][N];
-        vertex[][] verList = new vertex[N][N]];
+        vertex[][] verList = new vertex[N][N];
 
         int idx = 1;
 
         // input
         for (int i = 0; i < N; i++) {
-            String tmp = br.readLine().split("");
+            String[] tmp = br.readLine().split("");
             arr[i] = tmp;
             for (int j = 0; j < N; j++) {
                 if (arr[i][j] == 1) {
