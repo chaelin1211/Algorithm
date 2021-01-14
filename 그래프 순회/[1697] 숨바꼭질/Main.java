@@ -53,18 +53,13 @@ public class Main {
 			}
 			flag.put(num, true);
 
-			if (num < K) {// 효율을 위한 범위 제한
-				if (num < K) {
-					if (num * 2 > K) {
-						if (num * 2 - K < K - N) {
-							queue.add(num * 2);
-						}
-					}else 
-						queue.add(num * 2);
-				}
+			
+			if (num < K) {
+				queue.add(num * 2);
 				queue.add(num + 1);
 				queue.add(num - 1);
-			} else {
+			}
+			else {
 				queue.add(num - 1);
 			}
 		}
