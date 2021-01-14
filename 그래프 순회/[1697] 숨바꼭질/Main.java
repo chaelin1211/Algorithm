@@ -52,8 +52,9 @@ public class Main {
                 continue;
             }
             flag.put(num, true);
-
-            if (num < K) {// 효율을 위한 범위 제한
+            // 효율을 위한 범위 제한
+            if (num < K) {
+                //순간이동을 했을때 비효율이 발생하는 경우를 방지
                 if (num * 2 > K) {
                     if (num * 2 - K < K - N) {
                         queue.add(num * 2);
@@ -64,7 +65,7 @@ public class Main {
                 queue.add(num + 1);
                 queue.add(num - 1);
             }
-            else {
+            else {  //num > K 일때 K와 가까워지는 방법은 -1 밖에 없음
                 queue.add(num - 1);
             }
         }
