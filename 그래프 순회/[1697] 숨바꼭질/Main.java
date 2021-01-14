@@ -20,31 +20,52 @@ public class Main {
 		int count = 0;
 		int sizeOfQueue = 0;
 
-		Queue<Integer> queue = new LinkedList<Integer>();
-		boolean[] flag = new boolean[100000];
+		if (N >= K) {
+			return N - K;
+		}
 
-		//수빈이의 처음 위치
+		Queue<Integer> queue = new LinkedList<Integer>();
+		HashMap<Integer, Boolean> flag = new HashMap<Integer, Boolean>();
+
+		// 수빈이의 처음 위치
 		queue.add(N);
 		sizeOfQueue = queue.size();
-		while (sizeOfQueue!=0) {
-			int num = queue.remove();
-			sizeOfQueue--;
-			
-			if(num==K) {
-				return count;
-			}
-			
-			if (flag[num])
-				continue;
-			flag[num] = true;
-			
-			queue.add(num + 1);
-			queue.add(num - 1);
-			queue.add(num * 2);
-			
-			if(sizeOfQueue == 0) {
+		while (sizeOfQueue != 0 || !queue.isEmpty()) {
+			if (sizeOfQueue == 0) {
 				count++;
 				sizeOfQueue = queue.size();
+			}
+
+			int num = queue.remove();
+			sizeOfQueue--;
+
+			if (num == K) {
+				return count;
+			}
+
+			// 음수 제외
+			if (num < 0)
+				continue;
+
+			// 이미 지나간 자리 제외
+			if (flag.get(num) != null) {
+				continue;
+			}
+			flag.put(num, true);
+
+			if (num < K) {// 효율을 위한 범위 제한
+				if (num < K) {
+					if (num * 2 > K) {
+						if (num * 2 - K < K - N) {
+							queue.add(num * 2);
+						}
+					}else 
+						queue.add(num * 2);
+				}
+				queue.add(num + 1);
+				queue.add(num - 1);
+			} else {
+				queue.add(num - 1);
 			}
 		}
 		return count;
