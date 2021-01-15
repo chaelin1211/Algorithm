@@ -21,8 +21,11 @@ public class Main {
 	public static int function(int N, ArrayList<Integer> arr) {
 		int nowTime = 0;
 		int sum = 0;
-		int beforeWait = 0;
-		arr.sort(null);
+        int beforeWait = 0;
+        
+        //적은 시간 순으로 정렬하기 위한 sort
+        arr.sort(null);
+        
 		while (!arr.isEmpty()) {
 			nowTime = arr.remove(0);
 			
