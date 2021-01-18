@@ -37,7 +37,6 @@ public class Main {
 				minRank = p.r2;
 			}
 		}
-
 		return count;
 	}
 }
