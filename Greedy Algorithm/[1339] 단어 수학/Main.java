@@ -65,27 +65,3 @@ public class Main {
 		return answer;
 	}
 }
-
-class Alphabet implements Comparable<Alphabet> {
-	int firstIndex;
-	int count;
-	char Alph;
-
-	public Alphabet(char Alph, int firstIndex) {
-		this.Alph = Alph;
-		this.firstIndex = firstIndex;
-		this.count = 0;
-	}
-
-	@Override
-	public int compareTo(Alphabet o) {
-		if (this.firstIndex < o.firstIndex) {
-			return 1;
-		} else if (this.firstIndex == o.firstIndex) {
-			if (this.count > o.count) {
-				return 1;
-			}
-		}
-		return -1;
-	}
-}
