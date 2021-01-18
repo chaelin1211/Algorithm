@@ -33,8 +33,12 @@ public class Main {
 					count++;
 					continue;
 				}
-				char Al = str.charAt(idx);
-				if(Alph[Al] == 0) arr.add((int) Al);
+                char Al = str.charAt(idx);
+                
+                // 존재하는 알파벳 인덱스를 따로 저장하므로써 정렬 시간 단축
+                if(Alph[Al] == 0) arr.add((int) Al);
+                
+                // 각 자리수에 맞춰 저장
 				Alph[Al] += (int) Math.pow(10, i - 1);
 			}
 			i++;
@@ -42,7 +46,8 @@ public class Main {
 				break;
 			}
 		}
-		
+        
+        //알파벳 인덱스를 저장된 Alph 배열에 저장된 값을 내림차순으로 정렬
 		Collections.sort(arr, new Comparator<Integer>() {
 			@Override
 			public int compare(Integer o1, Integer o2) {
