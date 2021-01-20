@@ -33,7 +33,7 @@ public class Main {
     }
 
     public static int function(int N, int M, ArrayList<Vertex> arrayList) {
-        // 처음: 모든 배추 당 한마리의 애벌레 할당
+        // 처음: 모든 배추 당 한마리의 애벌레 할당 
         int larva = arrayList.size();
         Queue<Vertex> queue = new LinkedList<Vertex>();
         boolean[][] flags = new boolean[N][M];
