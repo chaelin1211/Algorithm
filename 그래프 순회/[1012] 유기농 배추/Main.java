@@ -31,7 +31,7 @@ public class Main {
         int larva = 0;
         // i, j
         // i순 오름차순 정렬 -> j순 오름차순 정렬
-        // 메소드 컨퍼런스 이용
+        // 메소드 레퍼런스 이용
         Comparator<Vertex> reversedComparator = Comparator.comparing(Vertex::getJ).reversed();
         arr.sort(Comparator.comparing(Vertex::getI).thenComparing(reversedComparator));
         return larva;
