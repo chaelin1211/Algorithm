@@ -14,7 +14,8 @@ public class Main {
 			hash.put(i, new Vertex(i, num));
 		}
 
-		printFunction(function(hash, N));
+        printFunction(function(hash, N));
+        sc.close();
 	}
 
 	public static void printFunction(ArrayList<Integer> arr) {
