@@ -14,11 +14,6 @@ public class Main {
 			hash.put(i, new Vertex(i, num));
 		}
 
-		for (int i = 1; i <= N; i++) {
-			Vertex s = hash.get(i);
-			Vertex e = hash.get(s.value);
-			s.incidentEdge = new Edge(s, e);
-		}
 		printFunction(function(hash, N));
 	}
 
@@ -35,38 +30,35 @@ public class Main {
 
 		int key = 1;
 		ArrayList<Integer> verList = new ArrayList<Integer>();
+		ArrayList<Integer> tmpList = new ArrayList<Integer>();
 		Vertex ver = null;
 
 		while (key <= N + 1) {
-			if (ver == null || hash.get(ver.key) == null) {
+			while (ver == null) {
 				ver = hash.get(key++);
+				tmpList.clear();
 			}
-
-			Vertex oppsiteVertex = ver.incidentEdge.oppositeVertex();
-
-			if (ver.incidentEdge.visits == 0) {
-				if (!oppsiteVertex.flag) {
-					// 최초 방문
-					ver.incidentEdge.visits++;
-					ver.flag = true;
-					ver = oppsiteVertex;
+			if (ver.flag) {
+				if (tmpList.contains(ver.key)) {
+					if (verList.contains(ver.key)) {
+						ver = hash.get(key++);
+						tmpList.clear();
+					} else {
+						// cycle ing
+						verList.add(ver.key);
+						ver = hash.get(ver.value);
+					}
 				} else {
-					// 싸이클은 아니나 이전에 방문된 경로 - 다시 방문할 필요가 없음
-					ver.flag = true;
-					ver = null;
+					// cycle은 아니나 이전에 방문된적 있는 경로
+					ver = hash.get(key++);
+					tmpList.clear();
 				}
-			} else if (ver.incidentEdge.visits > 0) {
-				// 싸이클
-				if (!verList.contains(oppsiteVertex.key)) {
-					verList.add(oppsiteVertex.key);
-					ver.incidentEdge.visits++;
-					ver.flag = true;
-					ver = oppsiteVertex;
-				}else {
-					//모든 싸이클 내의 Number를 ArrayList에 저장 끝
-					ver = null;
-				}
-			} 
+			} else {
+				// 최초 방문
+				ver.flag = true;
+				tmpList.add(ver.key);
+				ver = hash.get(ver.value);
+			}
 		}
 		verList.sort(null);
 		return verList;
@@ -76,36 +68,11 @@ public class Main {
 class Vertex {
 	int key;
 	int value;
-	Edge incidentEdge;
 	boolean flag;
 
 	public Vertex(int key, int value) {
 		this.key = key;
 		this.value = value;
 		this.flag = false;
-	}
-
-	public void setIncidentEdge(Vertex e) {
-		this.incidentEdge = new Edge(this, e);
-	}
-}
-
-class Edge {
-	Vertex s;
-	Vertex e;
-	int visits;
-
-	public Edge() {
-		this.visits = 0;
-	}
-
-	public Edge(Vertex s, Vertex e) {
-		this.s = s;
-		this.e = e;
-		this.visits = 0;
-	}
-
-	public Vertex oppositeVertex() {
-		return this.e;
 	}
 }
