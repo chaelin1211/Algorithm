@@ -41,6 +41,7 @@ public class Main {
 			if (ver.flag) {
 				if (tmpList.contains(ver.key)) {
 					if (verList.contains(ver.key)) {
+                        // cycle end
 						ver = hash.get(key++);
 						tmpList.clear();
 					} else {
