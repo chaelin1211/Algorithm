@@ -13,7 +13,7 @@ public class Main {
 			int num = sc.nextInt();
 			hash.put(i, new Vertex(i, num));
 		}
-
+    
         printFunction(function(hash, N));
         sc.close();
 	}
