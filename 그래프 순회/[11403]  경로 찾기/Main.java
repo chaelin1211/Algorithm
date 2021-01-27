@@ -16,3 +16,16 @@ public class Main {
         }
     }
 }
+class Vertex{
+    private int i, j;
+    public Vertex(int i, int j){
+        this.i = i;
+        this.j = j;
+    }
+    public getI(){
+        return this.i;
+    }
+    public getJ(){
+        return this.j;
+    }
+}   
