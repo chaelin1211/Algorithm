@@ -23,7 +23,7 @@ public class Main {
 				}
 			}
 		}
-		printArray(function(incidentTable, N));
+		printArray(function(incidentHashMap, N));
 	}
 
 	public static void printArray(int[][] Arr) {
@@ -37,26 +37,29 @@ public class Main {
 
 	public static int[][] function(HashMap<Integer, ArrayList<Integer>> incidentHashMap, int N) {
 		int[][] possiblePath = new int[N][N];
-		int i=0;
+		int i = -1;
 		// DFS 방식
 		Queue<Integer> queue = new LinkedList<Integer>();
-		while(i<=N){
-			ArrayList tmpArrayList = incidentHashMap.get(i);
-			if(tmpArrayList==null || tmpArrayList.size()==0){
+		while (i <= N) {
+			if (queue.isEmpty()) {
 				i++;
-				continue;
-			}else{
-				queue.addAll(tmpArrayList);
+				ArrayList tmpArrayList = incidentHashMap.get(i);
+				if (tmpArrayList == null || tmpArrayList.size() == 0) {
+					continue;
+				} else {
+					queue.addAll(tmpArrayList);
+				}
 			}
 			int index = queue.remove();
 
-			if(index == i){
+			if (index == i) {
 				possiblePath[i][i] = 1;
-				queue.clear();
 				continue;
-			}
-			else{
-				possiblePath[i][index] = 1;
+			} else {
+				if (possiblePath[i][index] == 0) {
+					possiblePath[i][index] = 1;
+					queue.addAll(incidentHashMap.get(index));
+				}
 			}
 		}
 
