@@ -24,14 +24,13 @@ public class Main {
     public static int function(int A, int B, int C) {
         int breakEvenPoint = 0;
         int cost = A;
-        int profit = 0;
 
         if (B >= C) {
             return -1;
         }
-        while (cost > profit) {
+        while (cost >= 0) {
             cost += B;
-            profit += B;
+            cost -= C;
             breakEvenPoint++;
         }
 
