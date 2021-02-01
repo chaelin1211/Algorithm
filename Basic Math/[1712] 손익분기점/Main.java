@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        
+
         int A, B, C;
         String input = br.readLine();
 
@@ -17,6 +17,23 @@ public class Main {
         B = Integer.parseInt(input.split(" ")[1]);
         C = Integer.parseInt(input.split(" ")[2]);
 
-        
+        System.out.println(function(A, B, C));
+    }
+
+    public static int function(int A, int B, int C) {
+        int breakEvenPoint = 0;
+        int cost = A;
+        int profit = 0;
+
+        if (B >= C) {
+            return -1;
+        }
+        while (cost > profit) {
+            cost += B;
+            profit += B;
+            breakEvenPoint++;
+        }
+
+        return breakEvenPoint;
     }
 }
