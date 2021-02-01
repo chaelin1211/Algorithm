@@ -28,6 +28,10 @@ public class Main {
         if (B >= C) {
             return -1;
         }
+
+        // cost = 비용 - 수익
+        // 비용 < 수익 일 경우 손익분기점
+        
         while (cost >= 0) {
             cost += B;
             cost -= C;
