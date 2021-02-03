@@ -1,10 +1,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 int main(void) {
-	char input[2][100001];
+	char input[2][10001];
 	int i, j, k, tmp=0;
 
-	int answer[200001];
+	int answer[20001];
 	int a, b;
 	scanf("%s %s", input[0], input[1]);
 
