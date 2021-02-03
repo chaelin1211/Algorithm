@@ -35,7 +35,7 @@ public class Main {
 			day++;
 		}
 		
-		day -= A / (A - B);
+		day -= A / (A - B); // 마지막에 미끄러지는 동작을 제외시켜주기 위해 day에서 뻬줌
 		return day + 1;
 	}
 }
