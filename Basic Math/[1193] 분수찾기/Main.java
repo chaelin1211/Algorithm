@@ -21,12 +21,13 @@ public class Main {
 		int A = 0, B = 0;
 		int flag = -1;
 
+        // 포함되는 열의 앞부분을 먼저 찾아 수행시간을 줄임
 		while (i + j < x) {
 			j++;
 			i += j;
 			flag *= -1;
 		}
-
+        
 		if (flag == 1) {
 			A = j;
 			B = 1;
@@ -47,9 +48,8 @@ public class Main {
 				B = 1;
 				flag *= -1;
 			}
-		}
-		// 1267
-
+        }
+        
 		return Integer.toString(A) + "/" + Integer.toString(B);
 	}
 }
