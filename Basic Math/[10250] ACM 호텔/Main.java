@@ -20,12 +20,16 @@ public class Main {
     public static int function(int H, int W, int N) {
         int roomNumber = 0;
 
-        int i = 1; // 엘리베이터에서부터 세었을 때의 번호
+        int i = 1;      // 엘리베이터에서부터 세었을 때의 번호
         while (N > H) {
-            N -= H;
+            N -= H;     // N은 층수를 가리키게 된다.    
             i++;
         }
-        roomNumber += (N*100);
+        
+        // 저층부터 고층 순으로 엘리베이터에 가까운 방을 배정하기 때문에
+        // N번 째 배정될 때 N = aH + b라면 b층의 a번 째 방에 배정되는 것이다.
+
+        roomNumber += (N * 100);
         roomNumber += i;
         return roomNumber;
     }
