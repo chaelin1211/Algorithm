@@ -21,7 +21,7 @@ public class Main {
         int roomNumber = 0;
 
         int i = 1; // 엘리베이터에서부터 세었을 때의 번호
-        while (N >= H) {
+        while (N > H) {
             N -= H;
             i++;
         }
