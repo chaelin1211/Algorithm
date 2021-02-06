@@ -24,18 +24,18 @@ public class Main {
         // K층 n호에 몇 명이 살고 있는지!!!
         // 0층부터 있고 각 층에는 1호부터 있다.
         // 0층의 i호에는 i명이 산다.
-        int[][] resident = new int[k][n+1];
-        for (int i = 0; i < k; i++) {
-            for (int j = 1; j < n; j++) {
+        int[][] resident = new int[k+1][n+1];
+        for (int i = 0; i <= k; i++) {
+            for (int j = 1; j <= n; j++) {
                 if (i == 0) {
                     resident[i][j] = j;
-                } else if (j == 1) { // i != 0
+                } else if (j == 1) {	// i != 0
                     resident[i][j] = resident[i - 1][j];
-                } else {
+                } else {				// i != 0 && j != 0
                     resident[i][j] = resident[i][j-1] + resident[i-1][j];
                 }
             }
         }
-        return resident[k-1][n];
+        return resident[k][n];
     }
 }
