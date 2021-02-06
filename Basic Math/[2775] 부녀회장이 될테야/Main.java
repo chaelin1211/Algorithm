@@ -26,7 +26,7 @@ public class Main {
         // 0층의 i호에는 i명이 산다.
         int[][] resident = new int[k][n+1];
         for (int i = 0; i < k; i++) {
-            for (int j = 1; i < n; j++) {
+            for (int j = 1; j < n; j++) {
                 if (i == 0) {
                     resident[i][j] = j;
                 } else if (j == 1) { // i != 0
