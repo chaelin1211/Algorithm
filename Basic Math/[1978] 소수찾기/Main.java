@@ -1,31 +1,35 @@
 import java.io.BufferedReader;
-
-import jdk.internal.org.jline.utils.InputStreamReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Main {
-    public static void main(String[] args) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws NumberFormatException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int N;
-        N = Integer.parseInt(br.readLine());
+		int N;
+		N = Integer.parseInt(br.readLine());
 
-        int answer = 0;
-        String input = br.readLine();
-        for (int i = 0; i < N; i++) {
-            int intInput = Integer.parseInt(input.split(" ")[i]);
-            if (function(intInput)) {
-                answer++;
-            }
-        }
-    }
+		int answer = 0;
+		String input = br.readLine();
+		for (int i = 0; i < N; i++) {
+			int intInput = Integer.parseInt(input.split(" ")[i]);
+			if (function(intInput)) {
+				answer++;
+			}
+		}
+		System.out.println(answer);
+		br.close();
+	}
 
-    public static boolean function(int N) {
-        if (N == 1 || N == 2 || N == 3 || N == 5 || N == 7) {
-            return true;
-        }
-        if (N % 2 != 0 && N % 3 != 0 && N % 5 != 0 && N % 7 != 0) {
-            return true;
-        }
-        return false;
-    }
+	public static boolean function(int N) {
+		if (N <= 1) {
+			return false;
+		}
+		for (int i = 2; i <= Math.sqrt(N); i++) {
+			if(N%i==0) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
