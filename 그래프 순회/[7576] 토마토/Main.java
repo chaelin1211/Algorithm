@@ -1,138 +1,127 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-	// BFS 적용
-	static Queue<vertex> startPoint = new LinkedList<vertex>();
-	static int[][] arr;
-
-	public static void main(String arg[]) throws NumberFormatException, IOException {
+	public static void main(String[] args) {
+		int N, M;
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		try {
+			String input = br.readLine();
+			StringTokenizer inputToken = new StringTokenizer(input, " ");
+			N = Integer.parseInt(inputToken.nextToken());
+			M = Integer.parseInt(inputToken.nextToken());
 
-		String str = br.readLine();
-
-		int M = Integer.parseInt(str.split(" ")[0]);
-		int N = Integer.parseInt(str.split(" ")[1]);
-
-		arr = new int[N][M];
-
-		int numberOfZero = 0;
-		for (int i = 0; i < N; i++) {
-			str = br.readLine();
-			for (int j = 0; j < M; j++) {
-				int tmp = Integer.parseInt(str.split(" ")[j]);
-				arr[i][j] = tmp;
-				if (tmp == 1) {
-					startPoint.add(new vertex(i, j, tmp));
+			int[][] arr = new int[M][N];
+			for (int i = 0; i < M; i++) {
+				input = br.readLine();
+				inputToken = new StringTokenizer(input, " ");
+				int j = 0;
+				while (inputToken.hasMoreTokens()) {
+					arr[i][j++] = Integer.parseInt(inputToken.nextToken());
 				}
-				if (tmp == 0) {
-					numberOfZero++;
+			}
+			solution(N, M, arr);
+		} catch (NumberFormatException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void solution(int N, int M, int[][] arr) {
+		Queue<Location> queue = new LinkedList<Location>();
+		int numberOfTomato = 0; // 당일에 존재하는 익은 토마토 수
+		int allTomato = N * M; // 전체 익어야할 토마토 수
+		int dayTomato = 0; // 아직 주변 토마토에 영향을 주지 않은 익은 토마토 수
+		int day = 0; // 날짜
+		for (int i = 0; i < M; i++) {
+			for (int j = 0; j < N; j++) {
+				if (arr[i][j] == 1) {
+					queue.add(new Location(i, j));
+					numberOfTomato++;
+				} else if (arr[i][j] == -1) {
+					allTomato--;
 				}
 			}
 		}
-		System.out.print(findDay(startPoint, N, M, numberOfZero));
-	}
-
-	static public int findDay(Queue<vertex> startPoint, int N, int M, int numberOfZero) {
-		int i = startPoint.size();
-		int j = 0;
-		int day = -1;
-
-		while (!startPoint.isEmpty()) {
-			vertex ver = startPoint.remove();
-			j++;
-
-			ArrayList<edge> inci = ver.inciList;
-			if (inci.isEmpty()) {
-				inci = setInciList(ver, arr, N, M);
-			}
-
-			while (!inci.isEmpty()) {
-				edge edg = inci.remove(0);
-
-				vertex otherVer = edg.otherPoint(ver.i, ver.j);
-				if (otherVer != null) {
-					if (otherVer.num == 0) {
-						numberOfZero--;
-						arr[otherVer.i][otherVer.j] = 1;
-						otherVer.num = 1;
-						startPoint.add(otherVer);
-					}
-				}
-			}
-
-			if (i == j) {
-				j = 0;
-				i = startPoint.size();
+		dayTomato = numberOfTomato;
+		while (!queue.isEmpty()) {
+			if (dayTomato == 0) {
+				dayTomato = queue.size();
 				day++;
+//				System.out.println("day"+day+"-------------");
+//				for (int i = 0; i < M; i++) {
+//					for (int j = 0; j < N; j++) {
+//						System.out.print(arr[i][j] + " ");
+//					}
+//					System.out.println("");
+//				}
 			}
-		}
-		if (numberOfZero != 0)
-			return -1;
-		return day;
-	}
 
-	static public ArrayList<edge> setInciList(vertex ver, int[][] arr, int N, int M) {
-		int i = ver.i;
-		int j = ver.j;
-		if (i < N - 1) {
-			if (arr[i + 1][j] == 0) {
-				ver.inciList.add(new edge(ver, new vertex(i + 1, j, arr[i + 1][j])));
+			dayTomato--;
+
+			Location tmp = queue.remove();
+			int tmpI, tmpJ;
+			tmpI = tmp.getI();
+			tmpJ = tmp.getJ();
+
+//			위
+			if (tmpI > 0) {
+				if (arr[tmpI - 1][tmpJ] == 0) {
+					arr[tmpI - 1][tmpJ] = 1;
+					numberOfTomato++;
+					queue.add(new Location(tmpI - 1, tmpJ));
+				}
+			}
+//			아래
+			if (tmpI < M - 1) {
+				if (arr[tmpI + 1][tmpJ] == 0) {
+					arr[tmpI + 1][tmpJ] = 1;
+					numberOfTomato++;
+					queue.add(new Location(tmpI + 1, tmpJ));
+				}
+			}
+//			왼
+			if (tmpJ > 0) {
+				if (arr[tmpI][tmpJ - 1] == 0) {
+					arr[tmpI][tmpJ - 1] = 1;
+					numberOfTomato++;
+					queue.add(new Location(tmpI, tmpJ - 1));
+				}
+			}
+//			오
+			if (tmpJ < N - 1) {
+				if (arr[tmpI][tmpJ + 1] == 0) {
+					arr[tmpI][tmpJ + 1] = 1;
+					numberOfTomato++;
+					queue.add(new Location(tmpI, tmpJ + 1));
+				}
 			}
 		}
-		if (i > 0) {
-			if (arr[i - 1][j] == 0) {
-				ver.inciList.add(new edge(ver, new vertex(i - 1, j, arr[i - 1][j])));
-			}
+		if (numberOfTomato < allTomato) {
+			System.out.println(-1);
+		} else {
+			System.out.println(day);
 		}
-		if (j < M - 1) {
-			if (arr[i][j + 1] == 0) {
-				ver.inciList.add(new edge(ver, new vertex(i, j + 1, arr[i][j + 1])));
-			}
-		}
-		if (j > 0) {
-			if (arr[i][j - 1] == 0) {
-				ver.inciList.add(new edge(ver, new vertex(i, j - 1, arr[i][j - 1])));
-			}
-		}
-		return ver.inciList;
 	}
 }
 
-class vertex {
-	int i;
-	int j;
-	int num;
-	ArrayList<edge> inciList;
+class Location {
+	private int i, j;
 
-	vertex(int i, int j, int num) {
+	public Location(int i, int j) {
 		this.i = i;
 		this.j = j;
-		this.num = num;
-		inciList = new ArrayList<edge>();
-	}
-}
-
-class edge {
-	vertex s;
-	vertex e;
-
-	public edge(vertex s, vertex e) {
-		this.s = s;
-		this.e = e;
 	}
 
-	public vertex otherPoint(int i, int j) {
-		if (s.i == i && s.j == j) {
-			return e;
-		}
-		if (e.i == i && e.j == j) {
-			return s;
-		}
-		return null;
+	public int getI() {
+		return i;
+	}
+
+	public int getJ() {
+		return j;
 	}
 }
