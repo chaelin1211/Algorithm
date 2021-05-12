@@ -38,10 +38,12 @@ public class Main {
 class Solution {
     int N;
     int[] arr;
+    Sort sort;
 
     public Solution(int N, int[] arr) {
         this.N = N;
         this.arr = arr;
+        sort = new Sort(arr);
     }
 
     public void printArr() {
@@ -54,17 +56,22 @@ class Solution {
     public void solution(int[][] terms) {
         Stack<Order> stack = new Stack<Order>();
         int beforOrder = -1;
+        // 명령 필터링
         for (int i = terms.length - 1; i >= 0; i--) {
             int A = terms[i][0];
             int B = terms[i][1];
+            // DESC order
             if (beforOrder < B) {
+                // flag: false (DESC)이면 이전 명령 pop
                 if (!stack.isEmpty() && !stack.peek().flag) {
                     stack.pop();
                 }
                 stack.add(new Order(B, false));
                 beforOrder = B;
             }
+            // ASC order
             if (beforOrder < A) {
+                // flag: true (ASC)이면 이전 명령 pop
                 if (!stack.isEmpty() && stack.peek().flag) {
                     stack.pop();
                 }
@@ -74,10 +81,10 @@ class Solution {
         }
         int s = 1;
         int e = 1;
-
+        // 정렬 수행
         if (!stack.isEmpty()) {
             e = stack.peek().x;
-            sortAsc(e);
+            sort.sortAsc(e);
         }
 
         Stack<Integer> arrStack = new Stack<Integer>();
@@ -102,10 +109,19 @@ class Solution {
                 }
             }
         }
+        // 원본 배열과 합치는 과정
         int i = 1;
         while (!arrStack.isEmpty()) {
             arr[i++] = arrStack.pop();
         }
+    }
+}
+
+class Sort {
+    int[] arr;
+
+    public Sort(int[] arr) {
+        this.arr = arr;
     }
 
     public void sortAsc(int x) {
@@ -119,11 +135,6 @@ class Solution {
 
             downHeap(1, e);
         }
-    }
-
-    public void sortDesc(int x) {
-        sortAsc(x);
-        reverse(x);
     }
 
     public void buildHeap(int i, int x) {
@@ -151,14 +162,6 @@ class Solution {
             arr[ind] = tmp;
         }
         downHeap(ind, x);
-    }
-
-    public void reverse(int x) {
-        for (int i = 1, j = 0; i <= x / 2; i++, j++) {
-            int tmp = arr[i];
-            arr[i] = arr[x - j];
-            arr[x - j] = tmp;
-        }
     }
 }
 
