@@ -6,102 +6,173 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static void main(String[] arg) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String input = br.readLine();
-        StringTokenizer stk = new StringTokenizer(input);
-        int N = Integer.parseInt(stk.nextToken());
-        int M = Integer.parseInt(stk.nextToken());
-
-        int[][] arr = new int[N + 1][M + 1];
-        for (int i = 1; i <= N; i++) {
-            input = br.readLine();
-            stk = new StringTokenizer(input);
-            for (int j = 0; j < M; j++) {
-                arr[i][j + 1] = input.charAt(j) - ('1' - 1);
-            }
-        }
-        System.out.println(Solution.solution(N, M, arr));
-    }
+	public static void main(String[] arg) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = br.readLine();
+		StringTokenizer stk = new StringTokenizer(input);
+		int N = Integer.parseInt(stk.nextToken());
+		int M = Integer.parseInt(stk.nextToken());
+		char[][] map = new char[N][M];
+		for (int i = 0; i < N; i++) {
+			input = br.readLine();
+			for (int j = 0; j < M; j++) {
+				map[i][j] = input.charAt(j);
+			}
+		}
+		System.out.println(Solution.solution(N, M, map));
+	}
 }
 
 class Solution {
-    public static int solution(int N, int M, int[][] arr) {
-        int answer = 1;
-        boolean[][][] visited = new boolean[N + 1][M + 1][2];
+	public static int solution(int N, int M, char[][] map) {
+//		BFS 수행
+		int answer = 0;
+		boolean[][][][] visited = new boolean[N][M][N][M];
+		boolean redMarbleGoal = false;
 
-        Queue<Position> queue = new LinkedList<Position>();
-        queue.add(new Position(1, 1));
-        int[][] terms = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
-        int sizeOfQueue = 1;
+		Queue<Position> queue = new LinkedList<Position>();
+		Position pos = findMarble(N, M, map);
 
-        while (!queue.isEmpty()) {
-            if (sizeOfQueue == 0) {
-                answer++;
-                sizeOfQueue = queue.size();
-            }
-            Position pos = queue.remove();
-            sizeOfQueue--;
+		queue.add(pos);
+		map[pos.rx][pos.ry] = '.';
+		map[pos.bx][pos.by] = '.';
 
-            int x = pos.x;
-            int y = pos.y;
-            boolean isBreaked = pos.isBreaked;
-            int flagIndex = 0;
-            if (isBreaked)
-                flagIndex = 1;
+		int[][] terms = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+		int sizeOfRedQueue = 1;
 
-            if (visited[x][y][flagIndex]) {
-                continue;
-            }
+		while (!queue.isEmpty()) {
+			if (sizeOfRedQueue == 0) {
+				answer++;
+				sizeOfRedQueue = queue.size();
+			}
+			pos = queue.remove();
+			sizeOfRedQueue--;
 
-            visited[x][y][flagIndex] = true;
+			int rx = pos.rx;
+			int ry = pos.ry;
 
-            if (arr[x][y] == 1 && !isBreaked) {
-                // 벽 부수기
-                isBreaked = true;
-                flagIndex = 1;
-            }
+			int bx = pos.bx;
+			int by = pos.by;
 
-            if (x == N && y == M) {
-                break;
-            }
+			if (visited[rx][ry][bx][by]) {
+				continue;
+			}
 
-            for (int[] term : terms) {
-                int dx = x + term[0];
-                int dy = y + term[1];
+			visited[rx][ry][bx][by] = true;
 
-                if (dx <= 0 || dx > N || dy <= 0 || dy > M) {
-                    continue;
-                }
-                if ((isBreaked && arr[dx][dy] == 1) || visited[dx][dy][flagIndex]) {
-                    // 이전에 벽을 부순 적이 있을 때, 벽을 부술 수 없으니 1일 경우 continue
-                    // 이전에 방문한 적이 있는 좌표일 떄 continue
-                    continue;
-                }
-                queue.add(new Position(dx, dy, isBreaked));
-            }
-        }
-        if (!visited[N][M][0] && !visited[N][M][1]) {
-            // 어떤 경로로도 도달하지 못했을 때
-            return -1;
-        }
-        return answer;
-    }
+			if (map[rx][ry] == 'O' && map[bx][by] != 'O') {
+				redMarbleGoal = true;
+				break;
+			}
+			if (map[bx][by] == 'O') {
+				redMarbleGoal = false;
+				continue;
+			}
+
+//			구슬이 현재 위치에서 이동할 수 있는 범위 큐에 저장
+			for (int[] term : terms) {
+				queue.add(moveMarbles(pos, term, map));
+			}
+		}
+		if (!redMarbleGoal || answer > 10) {
+			return -1;
+		}
+
+		return answer;
+	}
+
+	public static Position findMarble(int N, int M, char[][] map) {
+//		구슬들의 위치를 찾아 Position 객체에 담아 리턴
+		Position pos = new Position();
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				if (map[i][j] == 'R') {
+					pos.rx = i;
+					pos.ry = j;
+				} else if (map[i][j] == 'B') {
+					pos.bx = i;
+					pos.by = j;
+				}
+			}
+		}
+		return pos;
+	}
+
+	public static Position moveMarbles(Position pos, int[] term, char[][] map) {
+//		빨간 구슬과 파란 구슬을 이동시킨다
+
+		int drx, dry, dbx, dby;
+//		빨간 구슬 이동
+		int[] position = moveMarble(pos.rx, pos.ry, term, map);
+		drx = position[0];
+		dry = position[1];
+
+//		파란 구슬 이동
+		position = moveMarble(pos.bx, pos.by, term, map);
+		dbx = position[0];
+		dby = position[1];
+
+//		구슬과 구슬이 마주칠 때
+		if (drx == dbx && dry == dby) {
+//			두 구슬이 구멍에 들어간 경우 제외
+//			원래 뒤에 있던 구슬을 다른 구슬 뒤로 이동
+			if (map[drx][dry] != 'O' && map[dbx][dby] != 'O') {
+//				각 구슬 이동한 거리 구하기
+				int rCount = Math.max(Math.abs(drx - pos.rx), Math.abs(dry - pos.ry));
+				int bCount = Math.max(Math.abs(dbx - pos.bx), Math.abs(dby - pos.by));
+				if (rCount < bCount) {
+					dbx -= term[0];
+					dby -= term[1];
+				} else {
+					drx -= term[0];
+					dry -= term[1];
+				}
+			}
+		}
+		return new Position(drx, dry, dbx, dby);
+	}
+
+	public static int[] moveMarble(int x, int y, int[] term, char[][] map) {
+//		한 구슬을 이동시킨다.
+
+		boolean flag = false;
+		int dx = x;
+		int dy = y;
+
+		while (!flag) {
+			dx += term[0];
+			dy += term[1];
+//			벽이나 구멍을 만나기 전까지 이동
+			if (map[dx][dy] != '.') {
+				if (map[dx][dy] == '#') {
+//					벽과 좌표가 같아지면 뒤로 이동
+					dx -= term[0];
+					dy -= term[1];
+				}
+				flag = true;
+			}
+		}
+
+		int[] position = new int[2];
+		position[0] = dx;
+		position[1] = dy;
+
+		return position;
+	}
 }
 
 class Position {
-    int x, y;
-    boolean isBreaked;
+	int rx, ry;
+	int bx, by;
 
-    public Position(int x, int y) {
-        this.x = x;
-        this.y = y;
-        isBreaked = false;
-    }
+	public Position() {
 
-    public Position(int x, int y, boolean isBreaked) {
-        this.x = x;
-        this.y = y;
-        this.isBreaked = isBreaked;
-    }
+	}
+
+	public Position(int rx, int ry, int bx, int by) {
+		this.rx = rx;
+		this.ry = ry;
+		this.bx = bx;
+		this.by = by;
+	}
 }
