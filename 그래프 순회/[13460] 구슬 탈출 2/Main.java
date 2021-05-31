@@ -122,55 +122,57 @@ class Solution {
             if (!redFlag) {
                 if (map[drx][dry] == 'O') {
                     redFlag = true;
-                }
-                drx += term[0];
-                dry += term[1];
-                // 벽에 부딪힐 때 이전으로 이동
-                if (map[drx][dry] == '#') {
-                    drx -= term[0];
-                    dry -= term[1];
-                    redFlag = true;
-                }
-                // 구슬과 구슬이 마주칠 때
-                if (drx == dbx && dry == dby) {
-                    // 두 구슬이 모두 구멍에 들어간 경우 같은 좌표일 수 있음
-                    // 위 경우는 제외하고 이전으로 이동
-                    if (map[drx][dry] != 'O') {
+                } else {
+                    drx += term[0];
+                    dry += term[1];
+                    // 벽에 부딪힐 때 이전으로 이동
+                    if (map[drx][dry] == '#') {
                         drx -= term[0];
                         dry -= term[1];
+                        redFlag = true;
                     }
-                    redFlag = true;
-                }
-                // 빨간 구슬이 이동 후, 파란 구슬이 다시 이동할 수 있는지 확인
-                if (!redFlag && blueFlag) {
-                    blueFlag = false;
+                    // 구슬과 구슬이 마주칠 때
+                    if (drx == dbx && dry == dby) {
+                        // 두 구슬이 모두 구멍에 들어간 경우 같은 좌표일 수 있음
+                        // 위 경우는 제외하고 이전으로 이동
+                        if (map[drx][dry] != 'O') {
+                            drx -= term[0];
+                            dry -= term[1];
+                        }
+                        redFlag = true;
+                    }
+                    // 빨간 구슬이 이동 후, 파란 구슬이 다시 이동할 수 있는지 확인
+                    if (!redFlag && blueFlag) {
+                        blueFlag = false;
+                    }
                 }
             }
             if (!blueFlag) {
                 if (map[dbx][dby] == 'O') {
                     blueFlag = true;
-                }
-                dbx += term[0];
-                dby += term[1];
-                // 벽에 부딪힐 때 이전으로 이동
-                if (map[dbx][dby] == '#') {
-                    dbx -= term[0];
-                    dby -= term[1];
-                    blueFlag = true;
-                }
-                // 구슬과 구슬이 마주칠 때
-                if (drx == dbx && dry == dby) {
-                    // 두 구슬이 모두 구멍에 들어간 경우 같은 좌표일 수 있음
-                    // 위 경우는 제외하고 이전으로 이동
-                    if (map[dbx][dby] != 'O') {
+                } else {
+                    dbx += term[0];
+                    dby += term[1];
+                    // 벽에 부딪힐 때 이전으로 이동
+                    if (map[dbx][dby] == '#') {
                         dbx -= term[0];
                         dby -= term[1];
+                        blueFlag = true;
                     }
-                    blueFlag = true;
-                }
-                // 빨간 구슬이 이동 후, 파란 구슬이 다시 이동할 수 있는지 확인
-                if (!blueFlag && redFlag) {
-                    redFlag = false;
+                    // 구슬과 구슬이 마주칠 때
+                    if (drx == dbx && dry == dby) {
+                        // 두 구슬이 모두 구멍에 들어간 경우 같은 좌표일 수 있음
+                        // 위 경우는 제외하고 이전으로 이동
+                        if (map[dbx][dby] != 'O') {
+                            dbx -= term[0];
+                            dby -= term[1];
+                        }
+                        blueFlag = true;
+                    }
+                    // 빨간 구슬이 이동 후, 파란 구슬이 다시 이동할 수 있는지 확인
+                    if (!blueFlag && redFlag) {
+                        redFlag = false;
+                    }
                 }
             }
             // 두 구슬 모두 정지되었을 때 종료
