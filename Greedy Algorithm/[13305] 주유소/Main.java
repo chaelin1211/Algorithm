@@ -26,15 +26,12 @@ class Solution {
 
         while (i < N - 1) {
             if (minPrice > prices[j]) {
-                answer += distances[i++] * prices[j];
-                minPrice = prices[j++];
-            } else {
-                answer += distances[i++] * minPrice;
-                j++;
+                minPrice = prices[j];
             }
+            answer += distances[i] * minPrice;
+            j++;
+            i++;
         }
         return answer;
     }
-}public class Main {
-    
 }
